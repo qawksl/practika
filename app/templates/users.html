@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}Медперсонал{% endblock %}
+{% block content %}
+<section style="margin-top: 7.5rem;">
+    <h2>Медперсонал</h2>
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Имя</th>
+                <th>Ф.И.О</th>
+                <th>Должность</th>
+                <th>Логин</th>
+                <th>Пароль</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for user in users %}
+            <tr>
+                <td>{{ user.id }}</td>
+                <td>{{ user.name }}</td>
+                <td>{{ user.sur_name }}</td>
+                <td>{{ user.position }}</td>
+                <td>{{ user.username }}</td>
+                <td>{{ user.password }}</td>
+                <td>
+                    <a class="btn btn-outline-warning" href="/user/edit/{{user.id}}">Изменить</a>
+                    <a class="btn btn-outline-danger" href="/user/del/{{user.id}}">Удалить</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <a class="btn btn-success" href="/user/add">Добавить</a>
+</section>
+{% endblock %}

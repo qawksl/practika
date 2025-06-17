@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %}Пациенты{% endblock %}
+{% block content %}
+<section style="margin-top: 7.5rem;">
+    <h2>Пациенты</h2>
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Фото</th>
+                <th>Ф.И.О.</th>
+                <th>Дата рождения</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for patient in patients %}
+            <tr>
+                <td>{{ patient.id }}</td>
+                <td>
+                    <img src="/student/photo/{{ patient.id }}.png" style="width: 200px; height: 200px; object-fit: cover;">
+                </td>
+                <td>{{ patient.name }} {{ patient.sur_name }} {{ patient.data_of_birth }}</td>
+                <td>
+                    <a class="btn btn-outline-warning" href="/student/edit/{{patient.id}}">Изменить</a>
+                    <a class="btn btn-outline-danger" href="/student/del/{{patient.id}}">Удалить</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <a class="btn btn-success" href="/student/add">Добавить</a>
+</section>
+{% endblock %}

@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block content %}
+<form method="POST" style="margin-top: 4.5rem;">
+  <h2>Редактирование пациента</h2>
+  <input type="hidden" id="id-input" name="id" value="{{student.id}}">
+  <div class="form-group">
+    <label for="first-name">Фамилия</label>
+    <input type="text" class="form-control" id="first-name-input" name="first-name" placeholder="Пупкин" value="{{student.first_name}}">
+  </div>
+  <div class="form-group">
+    <label for="last-name">Имя</label>
+    <input type="text" class="form-control" id="last-name-input" name="last-name" placeholder="Василий" value="{{student.last_name}}">
+  </div>
+  <div class="form-group">
+    <label for="patronymic">Дата рождения</label>
+    <input type="text" class="form-control" id="patronymic-input" name="patronymic" placeholder="Иванович">
+  </div>
+  <button type="submit" class="btn btn-success mt-2">Изменить</button>
+</form>
+{% endblock %}
