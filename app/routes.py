@@ -1,4 +1,5 @@
-from flask import render_template, request, redirect, url_for, jsonify, flash
+import os
+from flask import render_template, request, redirect, url_for, jsonify, flash, send_file, make_response
 from . import db
 from .models import User, Patient, Event
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
@@ -107,6 +108,48 @@ def init_routes(app):
             db.session.delete(patient)
             db.session.commit()
             return redirect("/patients")
+    
+    @app.route('/patient/photo-edit/<id>', methods=["GET", "POST"])
+    def patient_photo_edit(id):
+        if request.method == "GET":
+            patient = db.get_or_404(Patient, id)
+            return render_template('patient/add_photo.html', current="patients", patient=patient)
+        if request.method == "POST":
+            print("Hi")
+            # Проверяем, есть ли файл в запросе
+            if 'photo' not in request.files:
+                flash('No file part')
+                return redirect("/patients")
+        
+            file = request.files['photo']
+            print(file)
+        
+            # Если пользователь не выбрал файл
+            if file.filename == '':
+                flash('No selected file')
+                return redirect("/patients")
+            
+            def allowed_file(filename):
+                return '.' in filename and filename.rsplit('.', 1)[1].lower() in {"jpg"}
+            
+            # Если файл разрешен и корректен
+            if file and allowed_file(file.filename):
+                if not os.path.exists(app.config['IMGS']):
+                    os.makedirs(app.config['IMGS'])
+                file.save(os.path.abspath(os.path.join(app.config['IMGS'], f"{id}.jpg")))
+                return redirect("/patients")
+    
+        return redirect("/patients")
+
+    @app.route('/patient/photo/<id>', methods=["GET", "POST"])
+    def patient_photo(id):
+        if request.method == "GET":
+            patient = db.get_or_404(Patient, id)
+            if os.path.isfile(os.path.join(app.config['IMGS'], f"{id}.jpg")):
+                return send_file(os.path.abspath(os.path.join(app.config['IMGS'], f"{id}.jpg")), as_attachment=True)
+            else:
+                return make_response(f"File '{id}' not found.", 404)
+
 
     @app.route('/events')
     @login_required

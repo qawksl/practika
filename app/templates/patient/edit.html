@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block content %}
-<form method="POST" style="margin-top: 4.5rem;">
+<form method="POST" style="margin-top: 7.5rem;">
   <h2>Редактирование пациента</h2>
   <input type="hidden" id="id-input" name="id" value="{{patient.id}}">
   <div class="form-group">
@@ -13,9 +13,10 @@
     <input type="text" class="form-control" id="name-input" name="name" placeholder="Василий" value="{{patient.name}}">
   </div>
   <div class="form-group">
-    <label for="patronymic">Дата рождения</label>
+    <label for="data-of-birth">Дата рождения</label>
     <input type="text" class="form-control" id="data-of-birth-input" name="data-of-birth" placeholder="Иванович" value="{{patient.data_of_birth}}">
   </div>
+  
   <button type="submit" class="btn btn-success mt-2">Изменить</button>
 </form>
 {% endblock %}
