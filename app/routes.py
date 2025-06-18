@@ -150,6 +150,31 @@ def init_routes(app):
             else:
                 return make_response(f"File '{id}' not found.", 404)
 
+    @app.route('/patients/json')
+
+
+    def patients_all():
+
+
+        patients = Patient.query.all()
+
+
+        result = []
+
+
+        for patient in patients:
+
+
+            patients_dict = patient.__dict__
+
+
+            patients_dict.pop('_sa_instance_state', None)  # Удаляем служебное поле SQLAlchemy
+
+
+            result.append(patients_dict)
+
+
+        return jsonify(result)
 
     @app.route('/events')
     @login_required
