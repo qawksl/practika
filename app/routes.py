@@ -62,51 +62,51 @@ def init_routes(app):
             db.session.commit()
             return redirect("/users")
 
-    @app.route('/students')
+    @app.route('/patients')
     @login_required
-    def students():
-        students = Patient.query.all()
-        return render_template('students.html', current="patients", students=students)
+    def patients():
+        patients = Patient.query.all()
+        return render_template('patients.html', current="patients", patients=patients)
 
-    @app.route('/student/add', methods=["GET", "POST"])
+    @app.route('/patient/add', methods=["GET", "POST"])
     @login_required
-    def student_add():
+    def patient_add():
         if request.method == "GET":
-            return render_template('student/add.html', current="patients")
+            return render_template('patient/add.html', current="patients")
         if request.method == "POST":
-            student = Patient()
-            student.name = request.form["name"]
-            student.sur_name = request.form["sur-name"]
-            student.data_of_birth = request.form["data-of-birth"]
-            db.session.add(student)
+            patient = Patient()
+            patient.name = request.form["name"]
+            patient.sur_name = request.form["sur-name"]
+            patient.data_of_birth = request.form["data-of-birth"]
+            db.session.add(patient)
             db.session.commit()
-            return redirect("/students")
+            return redirect("/patients")
 
-    @app.route('/student/edit/<id>', methods=["GET", "POST"])
+    @app.route('/patient/edit/<id>', methods=["GET", "POST"])
     @login_required
-    def student_edit(id):
+    def patient_edit(id):
         if request.method == "GET":
-            student = db.get_or_404(Patient, id)
-            return render_template('student/edit.html', current="patients", student=student)
+            patient = db.get_or_404(Patient, id)
+            return render_template('patient/edit.html', current="patients", patient=patient)
         if request.method == "POST":
-            student = db.get_or_404(Patient, request.form["id"])
-            student.name = request.form["name"]
-            student.sur_name = request.form["sur-name"]
-            student.data_of_birth = request.form["data-of-birth"]
+            patient = db.get_or_404(Patient, request.form["id"])
+            patient.name = request.form["name"]
+            patient.sur_name = request.form["sur-name"]
+            patient.data_of_birth = request.form["data-of-birth"]
             db.session.commit()
-            return redirect("/students")
+            return redirect("/patients")
 
-    @app.route('/student/del/<id>', methods=["GET", "POST"])
+    @app.route('/patient/del/<id>', methods=["GET", "POST"])
     @login_required
-    def student_del(id):
+    def patient_del(id):
         if request.method == "GET":
-            student = db.get_or_404(Patient, id)
-            return render_template('student/del.html', current="patients", student=student)
+            patient = db.get_or_404(Patient, id)
+            return render_template('patient/del.html', current="patients", patient=patient)
         if request.method == "POST":
-            student = db.get_or_404(Patient, request.form["id"])
-            db.session.delete(student)
+            patient = db.get_or_404(Patient, request.form["id"])
+            db.session.delete(patient)
             db.session.commit()
-            return redirect("/students")
+            return redirect("/patients")
 
     @app.route('/events')
     @login_required
