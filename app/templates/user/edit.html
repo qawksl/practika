@@ -4,13 +4,28 @@
 <form method="POST" style="margin-top: 7.5rem;">
   <h2>Редактирование медперсонала</h2>
   <input type="hidden" id="id-input" name="id" value="{{user.id}}">
+ 
+
+
+  <div class="form-group">
+    <label for="exampleInputEmail1">Имя</label>
+    <input type="text" class="form-control" id="name-input" name="name" value="{{user.name}}">
+  </div>
+  <div class="form-group">
+    <label for="exampleInputEmail1">Ф.И.О</label>
+    <input type="text" class="form-control" id="sur_name-input" name="sur-name" value="{{user.sur_name}}">
+  </div>
+  <div class="form-group">
+    <label for="exampleInputEmail1">Должность</label>
+    <input type="text" class="form-control" id="position-input" name="position" value="{{user.position}}">
+  </div>
   <div class="form-group">
     <label for="exampleInputEmail1">Логин</label>
     <input type="text" class="form-control" id="username-input" name="username" placeholder="vasyapupkin3000" value="{{user.username}}">
   </div>
   <div class="form-group mt-2">
     <label for="password-input">Пароль</label>
-    <input type="password" class="form-control" id="password-input" name="password">
+    <input type="password" class="form-control" id="password-input" name="password" value="{{user.password}}">
   </div>
   <button type="submit" class="btn btn-success mt-2">Изменить</button>
 </form>
