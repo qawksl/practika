@@ -150,31 +150,15 @@ def init_routes(app):
             else:
                 return make_response(f"File '{id}' not found.", 404)
 
-    @app.route('/patients/json')
-
-
-    def patients_all():
-
-
-        patients = Patient.query.all()
-
-
-        result = []
-
-
-        for patient in patients:
-
-
-            patients_dict = patient.__dict__
-
-
-            patients_dict.pop('_sa_instance_state', None)  # Удаляем служебное поле SQLAlchemy
-
-
-            result.append(patients_dict)
-
-
-        return jsonify(result)
+    # @app.route('/patients/json')
+    # def patients_all():
+    #     patients = Patient.query.all()
+    #     result = []
+    #     for patient in patients:
+    #         patients_dict = patient.__dict__
+    #         patients_dict.pop('_sa_instance_state', None)  # Удаляем служебное поле SQLAlchemy
+    #         result.append(patients_dict)
+    #     return jsonify(result)
 
     @app.route('/events')
     @login_required
@@ -182,6 +166,23 @@ def init_routes(app):
         events = Event.query.all()
         
         return render_template('events.html', current="events", events=events)
+    
+    @app.route('/events/json')
+    def events_all():
+    # Получаем все события из базы данных
+        events = Event.query.all()
+    
+    # Преобразуем в список словарей
+        result = []
+        for event in events:
+            event_dict = {
+                'id': event.id,
+                'name': event.name,
+                'description': event.description
+            }
+        result.append(event_dict)
+    
+        return jsonify(result)
 
     @app.route('/login', methods=['GET', 'POST'])
     def login():
@@ -199,8 +200,11 @@ def init_routes(app):
                 next_page = request.args.get('next')
                 return redirect(next_page) if next_page else redirect("/")
             else:
-                flash('Неверное имя пользователя или пароль', 'danger')
-    
+                password_error = Event.query.filter_by(name="Пользователь не найден").first()
+            
+            # Если событие найдено - берем описание, иначе текст по умолчанию
+                error_message = password_error.name if password_error else 'Неверное имя пользователя или пароль'
+                flash(error_message, 'danger')
         return render_template('login.html')
 
     @app.route('/logout')
