@@ -17,9 +17,15 @@
                 <td>{{ event.id }}</td>
                 <td>{{ event.name }}</td>
                 <td>{{ event.description }}</td>
+
+                <td>
+                    <a class="btn btn-outline-warning" href="/event/edit/{{event.id}}">Изменить</a>
+                    <a class="btn btn-outline-danger" href="/event/del/{{event.id}}">Удалить</a>
+                </td>
             </tr>
             {% endfor %}
         </tbody>
     </table>
+    <a class="btn btn-success" href="/event/add">Добавить</a>
 </section>
 {% endblock %}

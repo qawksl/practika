@@ -8,6 +8,7 @@ class User(db.Model, UserMixin):
     sur_name = db.Column(db.String(120), nullable=False)
     username = db.Column(db.String(120), nullable=False)
     position = db.Column(db.String(120), nullable=False)
+    telegram_id = db.Column(db.String(60), nullable=True)
     is_active = db.Column(db.Boolean, default=True,  nullable=False)
 
     def get_id(self):

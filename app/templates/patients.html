@@ -19,7 +19,9 @@
                 <td>
                     <img src="/patient/photo/{{ patient.id }}" style="width: 200px; height: 200px; object-fit: cover;">
                 </td>
-                <td> {{ patient.name }} {{ patient.sur_name }} {{ patient.data_of_birth }}</td>
+                <td> {{ patient.name }} {{ patient.sur_name }} </td>
+                <td>{{ patient.data_of_birth }}</td>
+
                 <td>
                     <a class="btn btn-outline-primary" href="/patient/photo-edit/{{patient.id}}">Изменить фото</a>
                     <a class="btn btn-outline-warning" href="/patient/edit/{{patient.id}}">Изменить</a>

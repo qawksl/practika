@@ -3,6 +3,8 @@ from flask import render_template, request, redirect, url_for, jsonify, flash, s
 from . import db
 from .models import User, Patient, Event
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
+import requests
+
 
 def init_routes(app):
     @app.errorhandler(404)
@@ -31,6 +33,7 @@ def init_routes(app):
             user.name = request.form["name"]
             user.sur_name = request.form["sur-name"]
             user.position = request.form["position"]
+            user.telegram_id = request.form["telegram_id"]
             db.session.add(user)
             db.session.commit()
             return redirect("/users")
@@ -48,6 +51,7 @@ def init_routes(app):
             user.name = request.form["name"]
             user.sur_name = request.form["sur-name"]
             user.position = request.form["position"]
+            user.telegram_id = request.form["telegram_id"]
             db.session.commit()
             return redirect("/users")
 
@@ -166,6 +170,74 @@ def init_routes(app):
         events = Event.query.all()
         
         return render_template('events.html', current="events", events=events)
+
+    # @app.route('/event/add', methods=["GET", "POST"])
+    # def event_add():
+    #     if request.method == "POST":
+    #         event = Event()
+    #         event.name = request.json["name"]
+    #         event.description = request.json["description"]
+    #         db.session.add(event)
+    #         db.session.commit()
+    #         send_event_telegram(event)
+    #         return make_response("", 200)
+        
+    @app.route('/event/add', methods=["GET", "POST"])
+    @login_required
+    def event_add():
+        if request.method == "GET":
+            return render_template('event/add.html', current="events")
+        if request.method == "POST":
+            event = Event()
+            event.name = request.form["name"]
+            event.description = request.form["description"]
+            db.session.add(event)
+            db.session.commit()
+            return redirect("/events")
+        
+    @app.route('/event/edit/<id>', methods=["GET", "POST"])
+    @login_required
+    def event_edit(id):
+        if request.method == "GET":
+            event = db.get_or_404(Event, id)
+            return render_template('event/edit.html', current="events", event=event)
+        if request.method == "POST":
+            event = db.get_or_404(Event, request.form["id"])
+            event.name = request.form["name"]
+            event.description = request.form["description"]
+            db.session.commit()
+            return redirect("/events")
+
+    @app.route('/event/del/<id>', methods=["GET", "POST"])
+    @login_required
+    def event_del(id):
+        if request.method == "GET":
+            event = db.get_or_404(Event, id)
+            return render_template('event/del.html', current="events", event=event)
+        if request.method == "POST":
+            event = db.get_or_404(Event, request.form["id"])
+            db.session.delete(event)
+            db.session.commit()
+            return redirect("/events")
+    
+
+    def send_event_telegram(event):
+        users = User.query.all()
+        msg = f"{event.name}\n{event.description}"
+        url = f"http://{app.config['TELEGRAM_URL']}/send_notification"
+        headers = {"X-API-KEY": app.config['TELEGRAM_API_KEY']}
+        for user in users:
+            if user.telegram_id == None : continue
+            data = {
+                "user_id": user.telegram_id,  # ID пользователя из Telegram
+                "message": msg
+            }
+            try:
+                response = requests.post(url, json=data, headers=headers)
+                if response.status_code != 200:
+                    print(f"Ошибка отправки сообщения {data}")
+            except requests.exceptions.ConnectionError as e:
+                print(f"Ошибка подключения к Telegram Bot")
     
     @app.route('/events/json')
     def events_all():
@@ -206,6 +278,9 @@ def init_routes(app):
                 error_message = password_error.name if password_error else 'Неверное имя пользователя или пароль'
                 flash(error_message, 'danger')
         return render_template('login.html')
+    
+    
+    
 
     @app.route('/logout')
     @login_required

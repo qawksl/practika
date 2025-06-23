@@ -11,6 +11,7 @@
                 <th>Ф.И.О</th>
                 <th>Должность</th>
                 <th>Логин</th>
+                <th>Телеграм ID</th>
                 <!-- <th>Пароль</th> -->
             </tr>
         </thead>
@@ -22,6 +23,8 @@
                 <td>{{ user.sur_name }}</td>
                 <td>{{ user.position }}</td>
                 <td>{{ user.username }}</td>
+                <td>{{ user.telegram_id }}</td>
+
                 <!-- <td>{{ user.password }}</td> -->
                 <td>
                     <a class="btn btn-outline-warning" href="/user/edit/{{user.id}}">Изменить</a>

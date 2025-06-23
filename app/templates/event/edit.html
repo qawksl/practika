@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block content %}
+<form method="POST" style="margin-top: 7.5rem;">
+  <h2>Редактирование события</h2>
+  <input type="hidden" id="id-input" name="id" value="{{event.id}}">
+ 
+
+
+  <div class="form-group">
+    <label for="exampleInputEmail1">Название</label>
+    <input type="text" class="form-control" id="name-input" name="name">
+  </div>
+  <div class="form-group">
+    <label for="exampleInputEmail1">Описание</label>
+    <input type="text" class="form-control" id="description-input" name="description" >
+  </div>
+  <button type="submit" class="btn btn-success mt-2">Изменить</button>
+</form>
+{% endblock %}
