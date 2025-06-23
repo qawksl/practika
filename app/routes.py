@@ -154,15 +154,15 @@ def init_routes(app):
             else:
                 return make_response(f"File '{id}' not found.", 404)
 
-    # @app.route('/patients/json')
-    # def patients_all():
-    #     patients = Patient.query.all()
-    #     result = []
-    #     for patient in patients:
-    #         patients_dict = patient.__dict__
-    #         patients_dict.pop('_sa_instance_state', None)  # Удаляем служебное поле SQLAlchemy
-    #         result.append(patients_dict)
-    #     return jsonify(result)
+    @app.route('/patients/json')
+    def patients_all():
+        patients = Patient.query.all()
+        result = []
+        for patient in patients:
+            patients_dict = patient.__dict__
+            patients_dict.pop('_sa_instance_state', None)  # Удаляем служебное поле SQLAlchemy
+            result.append(patients_dict)
+        return jsonify(result)
 
     @app.route('/events')
     @login_required
@@ -171,54 +171,53 @@ def init_routes(app):
         
         return render_template('events.html', current="events", events=events)
 
-    # @app.route('/event/add', methods=["GET", "POST"])
-    # def event_add():
-    #     if request.method == "POST":
-    #         event = Event()
-    #         event.name = request.json["name"]
-    #         event.description = request.json["description"]
-    #         db.session.add(event)
-    #         db.session.commit()
-    #         send_event_telegram(event)
-    #         return make_response("", 200)
-        
     @app.route('/event/add', methods=["GET", "POST"])
-    @login_required
     def event_add():
-        if request.method == "GET":
-            return render_template('event/add.html', current="events")
         if request.method == "POST":
             event = Event()
-            event.name = request.form["name"]
-            event.description = request.form["description"]
+            event.name = request.json["name"]
+            event.description = request.json["description"]
             db.session.add(event)
             db.session.commit()
-            return redirect("/events")
+            send_event_telegram(event)
+            return make_response("", 200)
         
-    @app.route('/event/edit/<id>', methods=["GET", "POST"])
-    @login_required
-    def event_edit(id):
-        if request.method == "GET":
-            event = db.get_or_404(Event, id)
-            return render_template('event/edit.html', current="events", event=event)
-        if request.method == "POST":
-            event = db.get_or_404(Event, request.form["id"])
-            event.name = request.form["name"]
-            event.description = request.form["description"]
-            db.session.commit()
-            return redirect("/events")
+    # @app.route('/event/add', methods=["GET", "POST"])
+    # def event_add():
+    #     if request.method == "GET":
+    #         return render_template('event/add.html', current="events")
+    #     if request.method == "POST":
+    #         event = Event()
+    #         event.name = request.form["name"]
+    #         event.description = request.form["description"]
+    #         db.session.add(event)
+    #         db.session.commit()
+    #         return redirect("/events")
+        
+    # @app.route('/event/edit/<id>', methods=["GET", "POST"])
+    # @login_required
+    # def event_edit(id):
+    #     if request.method == "GET":
+    #         event = db.get_or_404(Event, id)
+    #         return render_template('event/edit.html', current="events", event=event)
+    #     if request.method == "POST":
+    #         event = db.get_or_404(Event, request.form["id"])
+    #         event.name = request.form["name"]
+    #         event.description = request.form["description"]
+    #         db.session.commit()
+    #         return redirect("/events")
 
-    @app.route('/event/del/<id>', methods=["GET", "POST"])
-    @login_required
-    def event_del(id):
-        if request.method == "GET":
-            event = db.get_or_404(Event, id)
-            return render_template('event/del.html', current="events", event=event)
-        if request.method == "POST":
-            event = db.get_or_404(Event, request.form["id"])
-            db.session.delete(event)
-            db.session.commit()
-            return redirect("/events")
+    # @app.route('/event/del/<id>', methods=["GET", "POST"])
+    # @login_required
+    # def event_del(id):
+    #     if request.method == "GET":
+    #         event = db.get_or_404(Event, id)
+    #         return render_template('event/del.html', current="events", event=event)
+    #     if request.method == "POST":
+    #         event = db.get_or_404(Event, request.form["id"])
+    #         db.session.delete(event)
+    #         db.session.commit()
+    #         return redirect("/events")
     
 
     def send_event_telegram(event):
